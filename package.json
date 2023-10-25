@@ -10,6 +10,7 @@
     "install:questions-service": "cd microservices/questions-service && npm install",
     "install:matching-service": "cd microservices/matching-service && npm install",
     "install:history-service": "cd microservices/history-service && npm install",
+    "install:collaboration-service": "cd microservices/collaboration-service && npm install",
     "install-all": "concurrently -c \"red,green,yellow,blue,magenta,cyan,gray\" \"npm:install:*\"",
 
     "dev:front-end": "cd microservices/front-end && npm run dev",
@@ -19,6 +20,7 @@
     "dev:rabbitMQ": "cd microservices/matching-service && npm run start:rabbitMQ",
     "dev:matching-service": "cd microservices/matching-service && npm run dev",
     "dev:history-service": "cd microservices/history-service && npm run dev",
+    "dev:collaboration-service": "cd microservices/collaboration-service && npm run start",
     "dev-all": "concurrently -c \"red,green,yellow,blue,magenta,cyan,gray\" \"npm:dev:*\""
   },
   "author": "",

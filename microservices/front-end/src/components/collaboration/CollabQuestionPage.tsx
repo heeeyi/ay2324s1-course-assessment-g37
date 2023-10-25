@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../store/hook";
-import { selectSortedFilteredQuestions } from "../store/slices/questionFilterSlice";
+import { useAppSelector, useAppDispatch } from "../../store/hook";
+import { selectSortedFilteredQuestions } from "../../store/slices/questionFilterSlice";
 import CollabQuestion from "./CollabQuestion";
-import { QuestionComplexity } from "./types";
-import { resetAndSetDifficulty } from "../store/slices/questionFilterSlice";
+import { QuestionComplexity } from "../types";
+import { resetAndSetDifficulty } from "../../store/slices/questionFilterSlice";
 
-interface CollabPageProps {
+interface CollabQuestionPageProps {
   difficulty: QuestionComplexity;
 }
 
-const CollabPage: React.FC<CollabPageProps> = ({ difficulty }) => {
+const CollabQuestionPage: React.FC<CollabQuestionPageProps> = ({
+  difficulty,
+}) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -27,14 +29,14 @@ const CollabPage: React.FC<CollabPageProps> = ({ difficulty }) => {
   };
 
   return (
-    <div>
+    <>
       <CollabQuestion
         questions={sortedQuestions}
         expandedQuestionId={expandedQuestionId}
         toggleQuestionDetails={toggleQuestionDetails}
       />
-    </div>
+    </>
   );
 };
 
-export default CollabPage;
+export default CollabQuestionPage;

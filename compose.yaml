@@ -1,18 +1,6 @@
 version: 'v2.21.0-desktop.1'
 
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: ./microservices/front-end
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "5173:5173"
-    environment:
-      AUTH_SERVICE_URL: http://auth-server:8080
-    depends_on:
-      - auth-server
-
   question-server:
     container_name: question-server
     build:
@@ -56,7 +44,7 @@ services:
       AUTH_SESSION_SECRET: /run/secrets/AUTH_SESSION_SECRET
       USER_SERVICE_URL: http://user-server:3219
       QUESTION_SERVICE_URL: http://question-server:3001
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_URL: amqp://rabbitmq:5672
     secrets:
       - AUTH_MONGODB_URI
       - AUTH_SESSION_SECRET
@@ -71,7 +59,7 @@ services:
       context: ./microservices/matching-service
       dockerfile: Dockerfile.match
     environment:
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_URL: amqp://rabbitmq:5672
     depends_on:
       - rabbitmq
 

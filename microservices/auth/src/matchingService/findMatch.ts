@@ -5,11 +5,10 @@ import { isMatchResponse } from './isMatchResponse';
 
 const QUEUE_NAME = 'matching_service_queue';
 
-const HOST = process.env.RABBITMQ_HOST ?? '127.0.0.1';
-const PORT = '5672';
+const URL = process.env.RABBITMQ_URL ?? 'amqp://127.0.0.1:5672';
 
 export async function sendMatchRequest(request: MatchRequest) {
-  const connection = await amqp.connect(`amqp://${HOST}:${PORT}`);
+  const connection = await amqp.connect(URL);
   const channel = await connection.createChannel();
   const q = await channel.assertQueue('', { exclusive: true });
 

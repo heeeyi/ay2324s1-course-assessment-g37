@@ -31,8 +31,14 @@ io.on("connection", (socket) => {
   // emit number of clients in room to ensure room is ready
   io.in(room).emit("room count", io.sockets.adapter.rooms.get(room)?.size);
 
-  socket.on("client code changes", (change) => {
-    socket.to(room).emit("server code changes", change);
+  // Request for any exisiting code
+  socket.broadcast.to(room).emit("request code", socket.id);
+  socket.on("send code", (id, code) => {
+    io.to(id).emit("receive code", code);
+  });
+
+  socket.on("client code changes", (delta) => {
+    socket.to(room).emit("server code changes", delta);
   });
 
   socket.on("other user has left", () => {
@@ -44,6 +50,9 @@ io.on("connection", (socket) => {
     for (const room of socket.rooms) {
       if (room !== socket.id) {
         socket.to(room).emit("other user has left", socket.id);
+        socket
+          .to(room)
+          .emit("room count", io.sockets.adapter.rooms.get(room)!.size - 1);
       }
     }
   });
