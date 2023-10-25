@@ -16,12 +16,12 @@ const CollabQuestion: React.FC<CollabQuestionProps> = ({
   return (
     <table className={styles.table_container}>
       <thead>
-        <>
+        <tr>
           <th className={`${styles.table_header} ${styles.title}`}>Title</th>
           <th className={`${styles.table_header} ${styles.category}`}>
             Category
           </th>
-        </>
+        </tr>
       </thead>
       <tbody>
         {questions.map((question) => (

@@ -12,7 +12,7 @@ if (
 ) {
   throw new Error("Missing database environment variables");
 }
-console.log("PGHOST", process.env.PGHOST);
+
 process.env.PGHOST = fs.existsSync(process.env.PGHOST)
   ? fs.readFileSync(process.env.PGHOST, "utf-8").trim()
   : process.env.PGHOST;

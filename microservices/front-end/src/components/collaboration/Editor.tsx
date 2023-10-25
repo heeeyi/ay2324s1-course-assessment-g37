@@ -1,40 +1,42 @@
-import { Socket } from "socket.io-client";
-import classes from "./CollaborationPage.module.css";
-import { useEffect, useState } from "react";
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
 import Quill, { TextChangeHandler } from "quill";
 import "quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
+import classes from "./CollaborationPage.module.css";
 
 interface EditorProps {
   socket: Socket | undefined;
 }
 
 function Editor({ socket }: EditorProps) {
-  const [quill, setQuill] = useState<Quill>();
-
-  const TOOLBAR_OPTIONS = [
-    ["bold", "italic", "underline", "strike"],
-    [{ color: [] }, { background: [] }],
-    ["code-block"],
-    ["clean"],
-  ];
+  const [, setQuill] = useState<Quill | null>();
 
   useEffect(() => {
-    if (!socket) return;
-    var editor = new Quill("#editor", {
+    if (socket === undefined) {
+      return;
+    }
+
+    const editor = new Quill("#editor", {
       theme: "snow",
       modules: {
-        toolbar: TOOLBAR_OPTIONS,
+        toolbar: [["code-block"]],
+        syntax: {
+          highlight: (text: string) => {
+            return hljs.highlight(text, { language: "javascript" }).value;
+          },
+        },
       },
       placeholder: "Write your code here...",
       scrollingContainer: "#scrolling-container",
     });
 
     socket.on("room count", (count) => {
-      if (count === 1) {
-        editor.disable();
-        // editor.setText("Waiting for another user...");
-      } else {
+      if (count == 2) {
         editor.enable();
+      } else {
+        editor.disable();
       }
     });
 
@@ -43,7 +45,6 @@ function Editor({ socket }: EditorProps) {
     });
 
     socket.on("receive code", (delta) => {
-      console.log(delta);
       editor.setContents(delta);
     });
 
@@ -52,11 +53,13 @@ function Editor({ socket }: EditorProps) {
       oldContents,
       source
     ) => {
-      if (source !== "user") return;
-      socket.emit("client code changes", delta);
+      if (source === "user") {
+        socket.emit("client code changes", delta);
+      }
     };
 
     editor.on("text-change", textChangeHandler);
+
     socket.on("server code changes", (delta) => {
       editor.off("text-change", textChangeHandler);
       editor.updateContents(delta);
@@ -64,7 +67,11 @@ function Editor({ socket }: EditorProps) {
     });
 
     setQuill(editor);
+
+    // cleanup
+    return () => setQuill(null);
   }, [socket]);
+
   return (
     <div id="scrolling-container" className={classes.scrollingContainer}>
       <div id="editor" className={classes.editor} />

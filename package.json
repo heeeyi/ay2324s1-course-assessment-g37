@@ -12,7 +12,6 @@
     "install:history-service": "cd microservices/history-service && npm install",
     "install:collaboration-service": "cd microservices/collaboration-service && npm install",
     "install-all": "concurrently -c \"red,green,yellow,blue,magenta,cyan,gray\" \"npm:install:*\"",
-
     "dev:front-end": "cd microservices/front-end && npm run dev",
     "dev:auth": "cd microservices/auth && npm run dev",
     "dev:user-service": "cd microservices/user-service && npm run start",
@@ -26,6 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "highlight.js": "^11.9.0"
   }
 }
